@@ -56,6 +56,8 @@ Follow the instructions below to set up your project.
 - Run command ```docker exec -it php /bin/sh``` on your terminal
 - Run command ```chmod -R 777 storage``` on your terminal after going into the php container on docker
 - If app:key still empty on .env run ```php artisan key:generate``` on your terminal after going into the php container on docker
+- Run command ```npm i``` on your terminal into the php container on docker
+- Run command ```npm run dev``` on your terminal into the php container on docker
 - To run artisan commands like migrate, etc. go to php container using ```docker exec -it php /bin/sh```
 - Go to http://localhost:8001 or any port you set to open Laravel
 
