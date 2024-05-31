@@ -9,6 +9,8 @@
 * [PHP 8.2](https://nodejs.org)
 * [Node](https://nodejs.org)
 * [NPM](https://www.npmjs.com)
+* [Angular](https://angular.dev/)
+* [Telerik](https://www.telerik.com/)
 * [PHP Prettier](https://github.com/prettier/plugin-php)
 * [Github Action To Run Prettier Check](https://github.com/ishaqadhel/docker-laravel-mysql-nginx-starter/actions)
 * [Github Action To Run PHP Unit Test](https://github.com/ishaqadhel/docker-laravel-mysql-nginx-starter/actions)
