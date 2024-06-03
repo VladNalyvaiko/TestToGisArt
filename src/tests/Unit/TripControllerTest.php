@@ -56,47 +56,47 @@ class TripControllerTest extends TestCase
      */
     public function testGetCalculatePayableTimeForAll(): void
     {
-        $driver_id = Trip::first()->driver_id;
-        $trips = Trip::where('driver_id', $driver_id)->get();
-        $dates = [];
-        foreach ($trips as $item) {
-            $startTime = strtotime($item->pickup);
-            $endTime = strtotime($item->dropoff);
+        $maxDriverId = Trip::max('driver_id');
 
-            $updated = false;
-            if (!empty($dates)) {
-                foreach ($dates as &$interval) {
-                    $intervalStart = strtotime($interval[0]);
-                    $intervalEnd = strtotime($interval[1]);
-                    if (($startTime <= $intervalEnd && $startTime >= $intervalStart)
-                        || ($endTime >= $intervalStart && $endTime <= $intervalEnd)
-                    ) {
-                        $interval[0] = min($interval[0], $item["pickup"]);
-                        $interval[1] = max($interval[1], $item["dropoff"]);
-                        $updated = true;
-                        break;
-                    }
-                }
-            }
+        $data = [
+            [
+                'driver_id' => $maxDriverId + 1,
+                'pickup' => '2024-01-01 13:00:00',
+                'dropoff' => '2024-01-01 15:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 1,
+                'pickup' => '2024-01-01 10:00:00',
+                'dropoff' => '2024-01-01 12:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 2,
+                'pickup' => '2024-01-01 10:00:00',
+                'dropoff' => '2024-01-01 18:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 2,
+                'pickup' => '2024-01-01 13:00:00',
+                'dropoff' => '2024-01-01 15:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 2,
+                'pickup' => '2024-01-01 17:00:00',
+                'dropoff' => '2024-01-01 18:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 2,
+                'pickup' => '2024-01-01 22:00:00',
+                'dropoff' => '2024-01-01 23:00:00'
+            ]
+        ];
 
-            if (!$updated) {
-                $dates[] = [
-                    $item["pickup"],
-                    $item["dropoff"]
-                ];
-            }
-        }
-
-        $totalTime = 0;
-        foreach ($dates as $interval) {
-            $pickupTime = strtotime($interval[0]);
-            $dropoffTime = strtotime($interval[1]);
-            $totalTime += ($dropoffTime - $pickupTime) / 60;
-        }
+        Trip::insert($data);
 
         $response = $this->post('/trips/calculated');
 
         $response->assertStatus(200)
-            ->assertJson([$driver_id => round($totalTime)]);
+            ->assertJson([$maxDriverId + 2 => 540])
+            ->assertJson([$maxDriverId + 1 => 240]);
     }
 }
