@@ -18,11 +18,13 @@ class DriverPayTimeCalculator
     {
         $result = [];
 
-        foreach ($data as $item) {
+        foreach ($data as &$item) {
             $startTime = strtotime($item->pickup);
             $endTime = strtotime($item->dropoff);
 
             if (array_key_exists($item->driver_id, $result)) {
+                $lastElementKey = array_key_last($result[$item->driver_id]);
+
                 foreach ($result[$item->driver_id] as $key => &$interval) {
                     $intervalStart = strtotime($interval["pickup"]);
                     $intervalEnd = strtotime($interval["dropoff"]);
@@ -39,7 +41,20 @@ class DriverPayTimeCalculator
                         break;
                     }
 
-                    if ($key === array_key_last($result[$item->driver_id])) {
+                    if (($intervalStart <= $endTime && $intervalStart >= $startTime)
+                        && ($intervalEnd >= $startTime && $intervalEnd <= $endTime)
+                    ) {
+                        unset($result[$item->driver_id][$key]);
+                    }
+
+                    if (($intervalStart <= $endTime && $intervalStart >= $startTime)
+                        || ($intervalEnd >= $startTime && $intervalEnd <= $endTime)
+                    ) {
+                        $item['pickup'] = min($interval["pickup"], $item["pickup"]);
+                        $item['dropoff'] = max($interval["dropoff"], $item["dropoff"]);
+                        unset($result[$item->driver_id][$key]);
+                    }
+                    if ($key === $lastElementKey) {
                         $result[$item->driver_id][] = [
                             'pickup' => $item->pickup,
                             'dropoff' => $item->dropoff

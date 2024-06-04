@@ -88,7 +88,42 @@ class TripControllerTest extends TestCase
                 'driver_id' => $maxDriverId + 2,
                 'pickup' => '2024-01-01 22:00:00',
                 'dropoff' => '2024-01-01 23:00:00'
-            ]
+            ],
+            [
+                'driver_id' => $maxDriverId + 3,
+                'pickup' => '2024-01-01 10:00:00',
+                'dropoff' => '2024-01-01 13:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 3,
+                'pickup' => '2024-01-01 17:00:00',
+                'dropoff' => '2024-01-01 18:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 3,
+                'pickup' => '2024-01-01 9:00:00',
+                'dropoff' => '2024-01-01 20:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 3,
+                'pickup' => '2024-01-01 2:00:00',
+                'dropoff' => '2024-01-01 4:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 3,
+                'pickup' => '2024-01-01 9:00:00',
+                'dropoff' => '2024-01-01 21:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 3,
+                'pickup' => '2024-01-01 9:00:00',
+                'dropoff' => '2024-01-01 20:00:00'
+            ],
+            [
+                'driver_id' => $maxDriverId + 3,
+                'pickup' => '2024-01-01 6:00:00',
+                'dropoff' => '2024-01-01 22:00:00'
+            ],
         ];
 
         Trip::insert($data);
@@ -97,6 +132,7 @@ class TripControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([$maxDriverId + 2 => 540])
-            ->assertJson([$maxDriverId + 1 => 240]);
+            ->assertJson([$maxDriverId + 1 => 240])
+            ->assertJson([$maxDriverId + 3 => 1080]);
     }
 }
